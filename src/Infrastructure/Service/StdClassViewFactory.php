@@ -28,7 +28,15 @@ class StdClassViewFactory extends AbstractViewFactory
                 'We found the class, bud did you forget to implement ViewInterface in it?'
             );
         }
-        return new $fqdn($data);
+
+        /** @var ViewInterface $view */
+        $view = $fqdn;
+
+        if (!$view::supports($data)) {
+            throw new \BadMethodCallException('Dta is not supported by view');
+        }
+
+        return new $view($data);
     }
 
     private function findInTaggedViews($fqdn): bool
